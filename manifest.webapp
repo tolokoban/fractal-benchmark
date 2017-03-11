@@ -1,0 +1,14 @@
+{
+  "launch_path": "/index.html",
+  "developer": {
+    "name": "tolokoban",
+    "url": "https://github.com/tolokoban/fractal-benchmark"
+  },
+  "icons": {
+    "128": "/icon-128.png",
+    "512": "/icon-512.png"
+  },
+  "name": "fractal-benchmark",
+  "version": "0.0.1",
+  "description": "Demontration of different javascript techniques to render a fractal."
+}

@@ -1,0 +1,174 @@
+<!DOCTYPE html><html><head><title>fractal-benchmark</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Demontration of different javascript techniques to render a fractal."></meta><script defer="null" src="js/@index.js"></script><link rel="stylesheet" type="text/css" href="css/wdg.button.css"><link rel="stylesheet" type="text/css" href="css/tfw.touchable.css"><link rel="stylesheet" type="text/css" href="css/dom.fx.css"><link rel="stylesheet" type="text/css" href="css/dom.css"><link rel="stylesheet" type="text/css" href="css/wdg.icon.css"><link rel="stylesheet" type="text/css" href="css/wdg.modal.css"><link rel="stylesheet" type="text/css" href="css/wdg.flex.css"><link rel="stylesheet" type="text/css" href="css/tfw.message.css"><link rel="stylesheet" type="text/css" href="css/app.css"><link rel="stylesheet" type="text/css" href="css/font.josefin.css"><script defer="null" src="js/$.js"></script><script defer="null" src="js/demo-5.js"></script><script defer="null" src="js/demo.js"></script><script defer="null" src="js/wdg.button.js"></script><script defer="null" src="js/tfw.touchable.js"></script><script defer="null" src="js/tfw.listeners.js"></script><script defer="null" src="js/dom.fx.js"></script><script defer="null" src="js/tfw.data-binding.js"></script><script defer="null" src="js/tfw.css.js"></script><script defer="null" src="js/dom.js"></script><script defer="null" src="js/tfw.pointer-events.js"></script><script defer="null" src="js/polyfill.classList.js"></script><script defer="null" src="js/polyfill.string.js"></script><script defer="null" src="js/polyfill.promise.js"></script><script defer="null" src="js/wdg.icon.js"></script><script defer="null" src="js/wdg.modal.js"></script><script defer="null" src="js/wdg.flex.js"></script><script defer="null" src="js/tfw.message.js"></script><script defer="null" src="js/demo-4.js"></script><script defer="null" src="js/demo-3.js"></script><script defer="null" src="js/demo-2.js"></script><script defer="null" src="js/demo-1.js"></script><script defer="null" src="js/x-widget.js"></script><script defer="null" src="js/app.js"></script><script defer="null" src="js/font.josefin.js"></script><link rel="stylesheet" type="text/css" href="css/@index.css"></head><body>
+  <section>
+    <h1 id="fractal-benchmark">Fractal benchmark</h1>
+<p>In this article we will chose different techniques to display a simple fractal
+made only with dots, but a lot of them. We are not studying fractals, but more
+how we can use all the power of modern javascript techniques to get the better
+performances.
+So we will start with the slower solution and we will walk to the fastest.</p>
+<p>The article has been tested with <strong>Firefox 52</strong>.</p>
+<h2 id="the-drawing-principal-of-our-fractal">The drawing principal of our fractal</h2>
+<p>Before starting to dig into the code, we need to know how we can build our
+fractal made of dots.</p>
+<p>We start at the origin point: (0,0). We call it <strong>V</strong> and it is a 2 dimensional
+vector. Let <strong>V&#39;</strong> be the next point. We compute it like this:</p>
+<p><div class="boxed">V' = M.V + T</div></p>
+<p>Where <strong>M</strong> is a 2x2 matrix and <strong>T</strong> is a 2 dimensional vector.</p>
+<p>This is not all. To get the gorgeous fern, you need 4 couples (<strong>M</strong>, <strong>T</strong>).
+At each step, you randomly choose one of these couples.</p>
+<p>Here are the data we used for this fern:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th style="text-align:right">Probability</th>
+<th style="text-align:right">M11</th>
+<th style="text-align:right">M12</th>
+<th style="text-align:right">M21</th>
+<th style="text-align:right">M22</th>
+<th style="text-align:right">Tx</th>
+<th style="text-align:right">Ty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td style="text-align:right">85%</td>
+<td style="text-align:right">0.85</td>
+<td style="text-align:right">0.04</td>
+<td style="text-align:right">-0.04</td>
+<td style="text-align:right">0.85</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1.6</td>
+</tr>
+<tr>
+<td>B</td>
+<td style="text-align:right">1%</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0.16</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td>C</td>
+<td style="text-align:right">7%</td>
+<td style="text-align:right">0.2</td>
+<td style="text-align:right">-0.26</td>
+<td style="text-align:right">0.23</td>
+<td style="text-align:right">0.22</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1.6</td>
+</tr>
+<tr>
+<td>D</td>
+<td style="text-align:right">7%</td>
+<td style="text-align:right">-0.15</td>
+<td style="text-align:right">0.28</td>
+<td style="text-align:right">0.26</td>
+<td style="text-align:right">0.24</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0.44</td>
+</tr>
+</tbody>
+</table>
+<h2 id="first-approach-__fillrect-__">First approach: <strong>fillRect()</strong></h2>
+<p>We start by using the 2D context function <code>fillRect( x, y, 1, 1 )</code>.</p>
+<p><pre class="custom highlight js">
+    <span class="function">for</span>(<span class="keyword"> var</span> i<span class="operator">=</span>0 ; i<span class="operator">&lt;</span>dotsPerFrame ; i<span class="operator">+</span><span class="operator">+</span> ) {
+      <span class="comment">// Select a transformation depending on a random probability.
+    </span>  p <span class="operator">=</span> Math.<span class="function">random</span>();
+     <span class="keyword"> if</span>( p <span class="operator">&lt;</span> pa ) {
+        xx <span class="operator">=</span> x <span class="operator">*</span> m11a <span class="operator">+</span> y <span class="operator">*</span> m12a <span class="operator">+</span> vxa;
+        yy <span class="operator">=</span> x <span class="operator">*</span> m21a <span class="operator">+</span> y <span class="operator">*</span> m22a <span class="operator">+</span> vya;
+      }
+     <span class="keyword"> else</span><span class="keyword"> if</span>( p <span class="operator">&lt;</span> pb ) {
+        xx <span class="operator">=</span> x <span class="operator">*</span> m11b <span class="operator">+</span> y <span class="operator">*</span> m12b <span class="operator">+</span> vxb;
+        yy <span class="operator">=</span> x <span class="operator">*</span> m21b <span class="operator">+</span> y <span class="operator">*</span> m22b <span class="operator">+</span> vyb;
+      }
+     <span class="keyword"> else</span><span class="keyword"> if</span>( p <span class="operator">&lt;</span> pc ) {
+        xx <span class="operator">=</span> x <span class="operator">*</span> m11c <span class="operator">+</span> y <span class="operator">*</span> m12c <span class="operator">+</span> vxc;
+        yy <span class="operator">=</span> x <span class="operator">*</span> m21c <span class="operator">+</span> y <span class="operator">*</span> m22c <span class="operator">+</span> vyc;
+      }
+     <span class="keyword"> else</span> {
+        xx <span class="operator">=</span> x <span class="operator">*</span> m11d <span class="operator">+</span> y <span class="operator">*</span> m12d <span class="operator">+</span> vxd;
+        yy <span class="operator">=</span> x <span class="operator">*</span> m21d <span class="operator">+</span> y <span class="operator">*</span> m22d <span class="operator">+</span> vyd;
+      }
+      <span class="comment">// Scale and center for the screen.
+    </span>  xd <span class="operator">=</span> xx<span class="operator">*</span>Z <span class="operator">+</span> CX;
+      yd <span class="operator">=</span> yy<span class="operator">*</span>Z <span class="operator">+</span> CY;
+      <span class="comment">// Use standard Context2D function `fillRect`.
+    </span>  ctx.<span class="function">fillRect</span>( xd, yd, 1, 1 );
+      <span class="comment">// Next point become current one.
+    </span>  x <span class="operator">=</span> xx;
+      y <span class="operator">=</span> yy;
+    }</pre></p>
+<p><div id="demo-10" style="display:none"></div></p>
+<h2 id="fifty-times-faster-with-__getimagedata-__">Fifty times faster with <strong>getImageData()</strong></h2>
+<p>The <code>getImageData()</code> function returns a typed array: <strong><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray">Uint8ClampedArray</a></strong>.
+All elements of such array are integers clamped between 0 and 255 inclusive.
+Pixels are stored rows per rows starting at the top of the image. In a row,
+pixels are stored from left to right. Each pixel needs 4 items: red, green, and
+alpha.</p>
+<p>Changing the color of a pixel is as simple as puting values in this array.</p>
+<p><pre class="custom highlight js">
+    var img <span class="operator">=</span> ctx.<span class="function">getImageData</span>(0, 0, W, H);<span class="keyword">
+    var</span> data <span class="operator">=</span> img.data;</pre></p>
+<p>Here is the new ploting loop:
+<pre class="custom highlight js">
+    <span class="function">for</span>(<span class="keyword"> var</span> i<span class="operator">=</span>0 ; i<span class="operator">&lt;</span>dotsPerFrame ; i<span class="operator">+</span><span class="operator">+</span> ) {
+      p <span class="operator">=</span> Math.<span class="function">random</span>();
+     <span class="keyword"> if</span>( p <span class="operator">&lt;</span> pa ) {
+        xx <span class="operator">=</span> x <span class="operator">*</span> m11a <span class="operator">+</span> y <span class="operator">*</span> m12a <span class="operator">+</span> vxa;
+        yy <span class="operator">=</span> x <span class="operator">*</span> m21a <span class="operator">+</span> y <span class="operator">*</span> m22a <span class="operator">+</span> vya;
+      }
+     <span class="keyword"> else</span><span class="keyword"> if</span>( p <span class="operator">&lt;</span> pb ) {
+        xx <span class="operator">=</span> x <span class="operator">*</span> m11b <span class="operator">+</span> y <span class="operator">*</span> m12b <span class="operator">+</span> vxb;
+        yy <span class="operator">=</span> x <span class="operator">*</span> m21b <span class="operator">+</span> y <span class="operator">*</span> m22b <span class="operator">+</span> vyb;
+      }
+     <span class="keyword"> else</span><span class="keyword"> if</span>( p <span class="operator">&lt;</span> pc ) {
+        xx <span class="operator">=</span> x <span class="operator">*</span> m11c <span class="operator">+</span> y <span class="operator">*</span> m12c <span class="operator">+</span> vxc;
+        yy <span class="operator">=</span> x <span class="operator">*</span> m21c <span class="operator">+</span> y <span class="operator">*</span> m22c <span class="operator">+</span> vyc;
+      }
+     <span class="keyword"> else</span> {
+        xx <span class="operator">=</span> x <span class="operator">*</span> m11d <span class="operator">+</span> y <span class="operator">*</span> m12d <span class="operator">+</span> vxd;
+        yy <span class="operator">=</span> x <span class="operator">*</span> m21d <span class="operator">+</span> y <span class="operator">*</span> m22d <span class="operator">+</span> vyd;
+      }
+      xd <span class="operator">=</span> xx<span class="operator">*</span>Z <span class="operator">+</span> CX;
+      yd <span class="operator">=</span> yy<span class="operator">*</span>Z <span class="operator">+</span> CY;
+      <span class="comment">// `(xd|xd)` is equivalent to `Math.floor(xd)`, but faster.
+    </span>  <span class="comment">// `&lt;&lt; 2` is a fast multipication by 4.
+    </span>  <span class="comment">// Remember that there are 4 elements per pixel.
+    </span>  <span class="comment">// We add 1 to get the green channel.
+    </span>  data[ 1 <span class="operator">+</span> (((xd<span class="operator">|</span>xd) <span class="operator">+</span> W <span class="operator">*</span> (yd<span class="operator">|</span>yd)) <span class="operator">&lt;</span><span class="operator">&lt;</span> 2) ] <span class="operator">=</span> 255;
+      x <span class="operator">=</span> xx;
+      y <span class="operator">=</span> yy;
+    }
+    <span class="comment">// Putting back the array in the canvas.
+    </span>ctx.<span class="function">putImageData</span>( img, 0, 0 );</pre></p>
+<p><div id="demo-21" style="display:none"></div></p>
+<h2 id="better-looking">Better looking</h2>
+<p>With this new technique it is now possible to make dots, that are hitten
+more often, lighter.</p>
+<p>The change is minimal:
+<pre class="custom highlight js">
+    data[ 1 <span class="operator">+</span> (((xd<span class="operator">|</span>xd) <span class="operator">+</span> W <span class="operator">*</span> (yd<span class="operator">|</span>yd)) <span class="operator">&lt;</span><span class="operator">&lt;</span> 2) ]<span class="operator">+</span><span class="operator">+</span>;</pre></p>
+<p><div id="demo-32" style="display:none"></div></p>
+<p>We can also use different colors to show what transformation has been choosen per pixel:</p>
+<ul>
+<li><strong>A</strong> is green.</li>
+<li><strong>B</strong> is red.</li>
+<li><strong>C</strong> is white.</li>
+<li><strong>D</strong> is blue.</li>
+</ul>
+<p><div id="demo-43" style="display:none"></div></p>
+<p>It seems that when the <strong>C</strong> transformation is choosen a pixel from anywhere
+will get into the bottom right leaf. It&#39;s like an attractor.</p>
+<p>But we are here to talk about speed, not math.
+So how can we be faster.</p>
+<h2 id="the-way-to-_asm-js_">The way to <em>asm.js</em></h2>
+<p><div id="demo-54" style="display:none"></div></p>
+
+  </section>
+</body></html>
