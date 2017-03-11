@@ -1,8 +1,95 @@
-<w-html app="main">
-    <section>
-        <center>
-            <wdg:button $text="English" $icon="flag-en" />
-            <wdg:button $text="Français" $icon="flag-fr" />
-        </center>
-    </section>
-</w-html>
+<x-html app="app">
+  <section>
+    <x-md>
+# Fractal benchmark
+
+In this article we will chose different techniques to display a simple fractal
+made only with dots, but a lot of them. We are not studying fractals, but more
+how we can use all the power of modern javascript techniques to get the better
+performances.
+So we will start with the slower solution and we will walk to the fastest.
+
+The article has been tested with __Firefox 52__.
+
+## The drawing principal of our fractal
+
+Before starting to dig into the code, we need to know how we can build our
+fractal made of dots.
+
+We start at the origin point: (0,0). We call it __V__ and it is a 2 dimensional
+vector. Let __V'__ be the next point. We compute it like this:
+
+<div class="boxed">V' = M.V + T</div>
+
+Where __M__ is a 2x2 matrix and __T__ is a 2 dimensional vector.
+
+This is not all. To get the gorgeous fern, you need 4 couples (__M__, __T__).
+At each step, you randomly choose one of these couples.
+
+Here are the data we used for this fern:
+
+
+| Name | Probability | M11     | M12     | M21     | M22     |   Tx    |   Ty    |
+| -:-- | ----------: | ------: | ------: | ------: | ------: | ------: | ------: |
+| A    | 85%         | 0.85    | 0.04    | -0.04   | 0.85    | 0       | 1.6     |
+| B    | 1%          | 0       | 0       | 0       | 0.16    | 0       | 0       |
+| C    | 7%          | 0.2     | -0.26   | 0.23    | 0.22    | 0       | 1.6     |
+| D    | 7%          | -0.15   | 0.28    | 0.26    | 0.24    | 0       | 0.44    |
+
+## First approach: __fillRect()__
+
+We start by using the 2D context function `fillRect( x, y, 1, 1 )`.
+
+<x-code src="mod/demo-1.js" section="loop"/>
+
+<x-widget name="demo-1" $text="Try it! But prepare to wait a bit."/>
+
+## Fifty times faster with __getImageData()__
+
+The `getImageData()` function returns a typed array: __[Uint8ClampedArray](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray)__.
+All elements of such array are integers clamped between 0 and 255 inclusive.
+Pixels are stored rows per rows starting at the top of the image. In a row,
+pixels are stored from left to right. Each pixel needs 4 items: red, green, and
+alpha.
+
+Changing the color of a pixel is as simple as puting values in this array.
+
+<x-code src="mod/demo-2.js" section="getImageData"/>
+
+Here is the new ploting loop:
+<x-code src="mod/demo-2.js" section="loop"/>
+
+<x-widget name="demo-2" $text="Using typed arrays is much more faster."/>
+
+## Better looking
+
+With this new technique it is now possible to make dots, that are hitten
+more often, lighter.
+
+The change is minimal:
+<x-code>data[ 1 + (((xd|xd) + W * (yd|yd)) << 2) ]++;</x-code>
+
+<x-widget name="demo-3" $text="Better looking for same speed!"/>
+
+We can also use different colors to show what transformation has been choosen per pixel:
+* __A__ is green.
+* __B__ is red.
+* __C__ is white.
+* __D__ is blue.
+
+<x-widget name="demo-4" $text="With different colors..."/>
+
+It seems that when the __C__ transformation is choosen a pixel from anywhere
+will get into the bottom right leaf. It's like an attractor.
+
+But we are here to talk about speed, not math.
+So how can we be faster.
+
+## The way to _asm.js_
+
+<x-widget name="demo-5" $text="Home made random generator."/>
+
+
+    </x-md>
+  </section>
+</x-html>
