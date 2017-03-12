@@ -66,7 +66,18 @@ var W = require('x-widget');
         W('demo-21', 'demo-2', {"text": "Using typed arrays is much more faster."})
         W('demo-32', 'demo-3', {"text": "Better looking for same speed!"})
         W('demo-43', 'demo-4', {"text": "With different colors..."})
-        W('demo-54', 'demo-5', {"text": "Home made random generator."})
+        W('demo-34', 'demo-3', {
+            dots: "50000000",
+            frames: "5",
+            text: "Math.random()"})
+        W('demo-55', 'demo-5', {
+            dots: "50000000",
+            frames: "5",
+            text: "Mitchell & Moore (24, 55)"})
+        W('demo-66', 'demo-6', {
+            dots: "50000000",
+            frames: "5",
+            text: "Linear Congruential (CC65)"})
 
     }
 );

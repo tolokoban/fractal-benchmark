@@ -1,5 +1,5 @@
 /** @module demo-5 */require( 'demo-5', function(require, module, exports) { var _=function(){var D={"en":{},"fr":{}},X=require("$").intl;function _(){return X(D,arguments);}_.all=D;return _}();
-    "use strict";
+     "use strict";
 
 var DemoKernel = require("demo");
 

@@ -62,26 +62,25 @@ addListener(
         APP = require('app');
 setTimeout(function (){if(typeof APP.start==='function')APP.start()});
 var W = require('x-widget');
-        W('rnd56', 'rnd', {
-            a: "1",
-            c: "1"})
-        W('rnd57', 'rnd', {
+        W('rnd7', 'rnd', {
             a: "22695477",
             c: "1",
             s: "16"})
-        W('rnd58', 'rnd', {
+        W('rnd8', 'rnd', {
             a: "65793",
             c: "4282663",
             s: "8"})
-        W('rnd59', 'rnd', {
+        W('rnd9', 'rnd', {
             a: "16843009",
             c: "826366247",
             s: "16"})
-        W('rnd260', 'rnd2', {
+        W('rnd210', 'rnd2', {
             a: "1",
             c: "2"})
-        W('rnd261', 'rnd2', {})
-        W('wdg.button62', 'wdg.button', {
+        W('rnd211', 'rnd2', {})
+        W('rnd312', 'rnd3', {})
+require('polyfill.mathml');
+        W('wdg.button13', 'wdg.button', {
             text: "Back to main page",
             icon: "back",
             href: "index.html"})

@@ -56,3 +56,7 @@ pre.highlight .regexp {
     background: #ff8;
     color: #000;
 }
+
+math {
+    display: inline;
+}
