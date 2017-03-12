@@ -1,2 +1,4 @@
 # fractal-benchmark
-Demontration of different javascript techniques to render a fractal.
+Demonstration of different javascript techniques to render a fractal.
+
+[Visit the website](https://tolokoban.github.io/fractal-benchmark).
