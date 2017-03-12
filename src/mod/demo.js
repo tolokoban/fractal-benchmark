@@ -12,8 +12,10 @@ var CX = W / 2, CY = H - 0;
 module.exports = function( obj, render, opts ) {
   if( typeof opts === 'undefined' ) opts = {};
   if( typeof opts.text === 'undefined' ) opts.text = 'Launch demo...';
-  if( typeof opts.frames !== 'number' ) opts.frames = 25;
-  if( typeof opts.dots !== 'number' ) opts.dots = 25000000;
+  opts.frames = parseInt( opts.frames );
+  if( isNaN(opts.frames) ) opts.frames = 25;
+  opts.dots = parseInt( opts.dots );
+  if( isNaN(opts.dots) ) opts.dots = 25000000;
 
   var btn = new Button({ text: opts.text, icon: "show" });
   btn.on( launch.bind( this, render, opts ) );

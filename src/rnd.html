@@ -3,14 +3,23 @@
     <x-md>
 # Random generators study
 
-<x-widget name="rnd" $a="1" $c="1"/>
+We use different random generators to get coords of dots that we plot in
+256x256 squares.
+
 <x-widget name="rnd" $a="22695477" $c="1" $s="16"/>
 <x-widget name="rnd" $a="65793" $c="4282663" $s="8"/>
 <x-widget name="rnd" $a="16843009" $c="826366247" $s="16"/>
 <x-widget name="rnd2" $a="1" $c="2"/>
 <x-widget name="rnd2"/>
+<x-widget name="rnd3"/>
 
-Let __m__ be 2^24. Our random generator will have a period of __m__ if and only if:
+## Linear congruential method
+
+Starting with an arbitrary seed <x-latex>X_0</x-latex>,
+we compute the next random vallue with this formula:
+<x-latex>X_{n+1} = (a X_n + c) \% m</x-latex>
+
+Let __m__ be 2^32. Our random generator will have a period of __m__ if and only if:
 
 * __c__ is relatively prime to __m__.
   _(__c__ must be odd.)_
@@ -19,7 +28,14 @@ Let __m__ be 2^24. Our random generator will have a period of __m__ if and only 
 * If __m__ is a multiple of 4, __a - 1__ is a multiple of 4.
   _(__a = 4.k + 1__)_
 
+## Mitchell and Moore method
 
+For any <x-latex>n > 54</x-latex>, we apply this formula:
+<x-latex>X_n = (X_{n-24} + X_{n-55}) \% m</x-latex>
+
+The seed is made of the 55 first element of <x-latex>X_n</x-latex>.
+The only constraint is that there must be at least one odd number.
+Otherwise, all the generated numbers will be even.
 <hr/>
 
 <wdg:button $text="Back to main page" $icon="back" $href="index.html" />

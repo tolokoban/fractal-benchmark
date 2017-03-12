@@ -4,6 +4,10 @@ html {
   background: #ccc;
 }
 
+p {
+  margin: 0;
+}
+
 body {
   text-align: center;
   margin: 0;

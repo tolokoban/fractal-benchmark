@@ -85,9 +85,24 @@ will get into the bottom right leaf. It's like an attractor.
 But we are here to talk about speed, not math.
 So how can we be faster.
 
-## The way to _asm.js_
+## Tweaking random generator
 
-<x-widget name="demo-5" $text="Home made random generator."/>
+Previous demos used the standard javascript function `Math.random()`. It uses an
+accurate and fast algorithm, but it is still a function call per dot.
+Using our own algorithm will allow us to inline it and prevent a function call.
+
+But it is not easy to write a good random generator. Just compare two following
+two demos to convince youself.
+
+<x-widget name="demo-3" $dots="50000000" $frames="5"
+  $text="Math.random()"/>
+<x-widget name="demo-5" $dots="50000000" $frames="5"
+  $text="Mitchell & Moore (24, 55)"/>
+<x-widget name="demo-6" $dots="50000000" $frames="5"
+  $text="Linear Congruential (CC65)"/>
+
+For more information about the random generators used,
+[see this short study](rnd.html).
 
 
     </x-md>
