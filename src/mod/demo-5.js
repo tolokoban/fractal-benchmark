@@ -25,11 +25,11 @@ module.exports = function(opts) {
       pd = (pd * 1023)|0;
 
       var values = new Uint32Array(64);
-      for( var k=0; k<64; k++ ) {
+      for( var k=0; k<55; k++ ) {
         values[k] = ((k*k + 47813) * 7) & 0xFFFF;
       }
       var rnd;
-      var n = 0;
+      var n = 54;
       var a = 64 - 24;
       var c = 64 - 55;
 
