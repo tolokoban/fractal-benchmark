@@ -1,4 +1,4 @@
-exports.config={"name":"\"fractal-benchmark\"","description":"\"Demontration of different javascript techniques to render a fractal.\"","author":"\"tolokoban\"","version":"\"0.0.1\"","major":"0","minor":"0","revision":"1","date":"2017-03-11T09:21:02.000Z","consts":{}};
+exports.config={"name":"\"fractal-benchmark\"","description":"\"Demontration of different javascript techniques to render a fractal.\"","author":"\"tolokoban\"","version":"\"0.0.2\"","major":"0","minor":"0","revision":"2","date":"2017-03-15T15:22:59.000Z","consts":{}};
 var currentLang = null;
 exports.lang = function(lang) {
     if (lang === undefined) {
