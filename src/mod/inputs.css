@@ -1,0 +1,40 @@
+div.inputs {
+  margin: 1rem;
+  display: inline-block;
+}
+
+div.inputs > div.table {
+  display: table;
+  box-shadow: 0 2px 4px rgba(0,0,0,.5);
+  background: #fff;
+  margin: 0 0 1rem 0;
+}
+
+div.inputs > div.table > div {
+  display: table-row;
+}
+
+div.inputs > div.table > div > div {
+  display: table-cell;
+  text-align: right;
+  padding: 4px 8px;
+}
+
+div.inputs > div.table > div > div.th {
+  text-align: center;
+  font-weight: bold;
+}
+
+div.inputs > div.table > div > div.p::after {
+  content: " / 1000";
+  display: inline-block;
+  font-size: 70%;
+  color: rgba(0,0,0,.5);
+  margin: 0 0 0 4px;
+}
+
+div.inputs > div.table input {
+  border: none;
+  background: #eee;
+  text-align: right;
+}

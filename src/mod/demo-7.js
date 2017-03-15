@@ -82,34 +82,45 @@ function Computer(global) {
     var rnd = 0|0;
     var n = 55|0, a = (64 - 24)|0, c = (64 - 55)|0;
     var x = 0|0, y = 0|0, xx = 0|0, yy = 0|0, xd = 0|0, yd = 0|0;
+    var p = 0|0;
+
+    pa = pa|0;
+    pb = pb|0;
+    pc = pc|0;
+    pd = pd|0;
+    vxa = +vxa; vya = +vya; m11a = +m11a; m12a = +m12a; m21a = +m21a; m22a = +m22a;
+    vxb = +vxb; vyb = +vyb; m11b = +m11b; m12b = +m12b; m21b = +m21b; m22b = +m22b;
+    vxc = +vxc; vyc = +vyc; m11c = +m11c; m12c = +m12c; m21c = +m21c; m22c = +m22c;
+    vxd = +vxd; vyd = +vyd; m11d = +m11d; m12d = +m12d; m21d = +m21d; m22d = +m22d;
+
     while( dots > 0 ) {
       dots = dots - 1|0;
       // Mitchell & Moore algorithm.
-      n = (n + 1) & 63;
+      n = ((n + 1) & 63)|0;
       rnd = (values[(a + n) & 63] + values[(c + n) & 63]) & 0xFFFF;
       values[n] = rnd;
       p = rnd & 1023;
       if( p < pa ) {
-        xx = x * m11a + y * m12a + vxa;
-        yy = x * m21a + y * m22a + vya;
+        xx = +(x * m11a + y * m12a + vxa);
+        yy = +(x * m21a + y * m22a + vya);
       }
       else if( p < pb ) {
-        xx = x * m11b + y * m12b + vxb;
-        yy = x * m21b + y * m22b + vyb;
+        xx = +(x * m11b + y * m12b + vxb);
+        yy = +(x * m21b + y * m22b + vyb);
       }
       else if( p < pc ) {
-        xx = x * m11c + y * m12c + vxc;
-        yy = x * m21c + y * m22c + vyc;
+        xx = +(x * m11c + y * m12c + vxc);
+        yy = +(x * m21c + y * m22c + vyc);
       }
       else {
-        xx = x * m11d + y * m12d + vxd;
-        yy = x * m21d + y * m22d + vyd;
+        xx = +(x * m11d + y * m12d + vxd);
+        yy = +(x * m21d + y * m22d + vyd);
       }
       xd = xx*Z + CX;
       yd = yy*Z + CY;
-      data[ 1 + (((xd|xd) + W * (yd|yd)) << 2) ]++;
-      x = xx;
-      y = yy;
+      data[ (1 + (((xd|xd) + W * (yd|yd)) << 2))|0 ]++;
+      x = +xx;
+      y = +yy;
     }
   }
 
