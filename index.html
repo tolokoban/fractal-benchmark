@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><title>fractal-benchmark</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Demontration of different javascript techniques to render a fractal."></meta><script defer="null" src="js/@index.js"></script><link rel="stylesheet" type="text/css" href="css/wdg.button.css"><link rel="stylesheet" type="text/css" href="css/tfw.touchable.css"><link rel="stylesheet" type="text/css" href="css/dom.fx.css"><link rel="stylesheet" type="text/css" href="css/dom.css"><link rel="stylesheet" type="text/css" href="css/wdg.icon.css"><link rel="stylesheet" type="text/css" href="css/wdg.modal.css"><link rel="stylesheet" type="text/css" href="css/wdg.flex.css"><link rel="stylesheet" type="text/css" href="css/tfw.message.css"><link rel="stylesheet" type="text/css" href="css/app.css"><link rel="stylesheet" type="text/css" href="css/font.josefin.css"><script defer="null" src="js/$.js"></script><script defer="null" src="js/demo-6.js"></script><script defer="null" src="js/demo.js"></script><script defer="null" src="js/wdg.button.js"></script><script defer="null" src="js/tfw.touchable.js"></script><script defer="null" src="js/tfw.listeners.js"></script><script defer="null" src="js/dom.fx.js"></script><script defer="null" src="js/tfw.data-binding.js"></script><script defer="null" src="js/tfw.css.js"></script><script defer="null" src="js/dom.js"></script><script defer="null" src="js/tfw.pointer-events.js"></script><script defer="null" src="js/polyfill.classList.js"></script><script defer="null" src="js/polyfill.string.js"></script><script defer="null" src="js/polyfill.promise.js"></script><script defer="null" src="js/wdg.icon.js"></script><script defer="null" src="js/wdg.modal.js"></script><script defer="null" src="js/wdg.flex.js"></script><script defer="null" src="js/tfw.message.js"></script><script defer="null" src="js/demo-5.js"></script><script defer="null" src="js/demo-4.js"></script><script defer="null" src="js/demo-3.js"></script><script defer="null" src="js/demo-2.js"></script><script defer="null" src="js/demo-1.js"></script><script defer="null" src="js/x-widget.js"></script><script defer="null" src="js/app.js"></script><script defer="null" src="js/font.josefin.js"></script><link rel="stylesheet" type="text/css" href="css/@index.css"></head><body>
+<!DOCTYPE html><html><head><title>fractal-benchmark</title><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Demontration of different javascript techniques to render a fractal."></meta><script defer="null" src="js/@index.js"></script><link rel="stylesheet" type="text/css" href="css/@index.css"></head><body>
   <section>
     <h1 id="fractal-benchmark">Fractal benchmark</h1>
 <p>In this article we will chose different techniques to display a simple fractal
@@ -73,6 +73,7 @@ At each step, you randomly choose one of these couples.</p>
 </tr>
 </tbody>
 </table>
+<p>To play with this data and see changes in live, please <a href="anim.html">click here</a>.</p>
 <h2 id="first-approach-__fillrect-__">First approach: <strong>fillRect()</strong></h2>
 <p>We start by using the 2D context function <code>fillRect( x, y, 1, 1 )</code>.</p>
 <p><pre class="custom highlight js">
@@ -104,7 +105,7 @@ At each step, you randomly choose one of these couples.</p>
     </span>  x <span class="operator">=</span> xx;
       y <span class="operator">=</span> yy;
     }</pre></p>
-<p><div id="demo-10" style="display:none"></div></p>
+<p><div id="demo-11" style="display:none"></div></p>
 <h2 id="fifty-times-faster-with-__getimagedata-__">Fifty times faster with <strong>getImageData()</strong></h2>
 <p>The <code>getImageData()</code> function returns a typed array: <strong><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray">Uint8ClampedArray</a></strong>.
 All elements of such array are integers clamped between 0 and 255 inclusive.
@@ -113,7 +114,7 @@ pixels are stored from left to right. Each pixel needs 4 items: red, green, and
 alpha.</p>
 <p>Changing the color of a pixel is as simple as puting values in this array.</p>
 <p><pre class="custom highlight js">
-    var img <span class="operator">=</span> ctx.<span class="function">getImageData</span>(0, 0, W, H);<span class="keyword">
+    var img <span class="operator">=</span> ctx.<span class="function">getImageData</span>(0, 0, W, H);<span class="keyword">
     var</span> data <span class="operator">=</span> img.data;</pre></p>
 <p>Here is the new ploting loop:
 <pre class="custom highlight js">
@@ -147,14 +148,14 @@ alpha.</p>
     }
     <span class="comment">// Putting back the array in the canvas.
     </span>ctx.<span class="function">putImageData</span>( img, 0, 0 );</pre></p>
-<p><div id="demo-21" style="display:none"></div></p>
+<p><div id="demo-22" style="display:none"></div></p>
 <h2 id="better-looking">Better looking</h2>
 <p>With this new technique it is now possible to make dots, that are hitten
 more often, lighter.</p>
 <p>The change is minimal:
 <pre class="custom highlight js">
     data[ 1 <span class="operator">+</span> (((xd<span class="operator">|</span>xd) <span class="operator">+</span> W <span class="operator">*</span> (yd<span class="operator">|</span>yd)) <span class="operator">&lt;</span><span class="operator">&lt;</span> 2) ]<span class="operator">+</span><span class="operator">+</span>;</pre></p>
-<p><div id="demo-32" style="display:none"></div></p>
+<p><div id="demo-33" style="display:none"></div></p>
 <p>We can also use different colors to show what transformation has been choosen per pixel:</p>
 <ul>
 <li><strong>A</strong> is green.</li>
@@ -162,7 +163,7 @@ more often, lighter.</p>
 <li><strong>C</strong> is white.</li>
 <li><strong>D</strong> is blue.</li>
 </ul>
-<p><div id="demo-43" style="display:none"></div></p>
+<p><div id="demo-44" style="display:none"></div></p>
 <p>It seems that when the <strong>C</strong> transformation is choosen a pixel from anywhere
 will get into the bottom right leaf. It&#39;s like an attractor.</p>
 <p>But we are here to talk about speed, not math.
@@ -173,11 +174,13 @@ accurate and fast algorithm, but it is still a function call per dot.
 Using our own algorithm will allow us to inline it and prevent a function call.</p>
 <p>But it is not easy to write a good random generator. Just compare two following
 two demos to convince youself.</p>
-<p><div id="demo-34" style="display:none"></div>
-<div id="demo-55" style="display:none"></div>
-<div id="demo-66" style="display:none"></div></p>
+<p><div id="demo-35" style="display:none"></div>
+<div id="demo-56" style="display:none"></div>
+<div id="demo-67" style="display:none"></div></p>
 <p>For more information about the random generators used,
 <a href="rnd.html">see this short study</a>.</p>
+<h2 id="webassembly">WebAssembly</h2>
+<p><div id="demo-78" style="display:none"></div></p>
 
   </section>
 </body></html>
