@@ -9,6 +9,6 @@
     "512": "/icon-512.png"
   },
   "name": "fractal-benchmark",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Demontration of different javascript techniques to render a fractal."
 }

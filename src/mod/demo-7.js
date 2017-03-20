@@ -3,7 +3,6 @@
 var DemoKernel = require("demo");
 
 /*
-// Promise for WASM fetching and compiling.
 var loadWasm = new Promise(function (resolve, reject) {
   fetch("test.wasm").then(function(response) {
     return response.arrayBuffer();
@@ -19,6 +18,29 @@ var loadWasm = new Promise(function (resolve, reject) {
 });
 */
 
+// Promise for WASM fetching and compiling.
+var wasmModule = null;
+var wasmPromise = fetch('test.wasm') // Fetch the binary
+    .then(function(response) {
+      return response.arrayBuffer();
+    })
+    .then(function(buffer) {
+      console.log(WebAssembly.validate(buffer));
+      return WebAssembly.compile(buffer);
+    }) // Get a Module from the buffer
+    .then(function(module) {
+      // Get an Instance of the Module
+      console.log("module=", module);
+      wasmModule = new WebAssembly.Instance(module, {});
+      console.log("wasmModule=", wasmModule);
+      return new Promise(function (resolve, reject) {
+        resolve( wasmModule );
+      });
+    }, function(err) {
+      console.error(err);
+    });
+
+
 module.exports = function(opts) {
  DemoKernel( this, function(
      done, canvas, dotsPerFrame, nbFrames,
@@ -28,6 +50,7 @@ module.exports = function(opts) {
      pc, vxc, vyc, m11c, m12c, m21c, m22c,
      pd, vxd, vyd, m11d, m12d, m21d, m22d
  ) {
+   wasmPromise.then(function(wasmMod) {
      var ctx = canvas.getContext('2d');
      var x = 0, y = 0;
      var xd, yd, p, xx, yy;
@@ -41,8 +64,11 @@ module.exports = function(opts) {
      pc = (pc * 1023)|0;
      pd = (pd * 1023)|0;
 
+/*
      var computer = new Computer(window);
      var compute = computer.compute;
+     */
+     var compute = wasmMod.exports.compute;
 
      function paint() {
        if( nbFrames > 0 ) window.requestAnimationFrame( paint );
@@ -61,6 +87,7 @@ module.exports = function(opts) {
        nbFrames--;
      }
      window.requestAnimationFrame( paint );
+   });
  }, opts);
 };
 
