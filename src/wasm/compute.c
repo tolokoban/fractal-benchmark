@@ -1,6 +1,20 @@
 // Compile this C code with https://mbebenita.github.io/WasmExplorer/
 
-void compute(
+#include <emscripten/emscripten.h>
+
+// Initialise seed for Mitchell and Moore algorithm.
+unsigned int values[64] = {
+  197836, 142543, 291521, 273561, 670056, 116695, 683937, 296537,
+  177078, 951911, 593837, 986708, 452842, 106204, 131928, 664729,
+  264312, 809367, 493748, 202314, 437622, 128469, 596988, 260804,
+  163751, 367768, 128855, 972013, 767828, 473042, 455736, 179862,
+  838753, 985825, 893627, 804729, 233619, 199135, 624805, 365403,
+  980247, 443497, 453940, 118814, 603288, 600320, 736065, 909999,
+  583336, 670013, 387305, 806653, 952255, 828683, 938444, 138474,
+  313893, 283357, 221719, 212776, 774775, 779879, 794590, 787382
+};
+
+void EMSCRIPTEN_KEEPALIVE compute(
     unsigned char* data, int dots,
     unsigned int W, unsigned int H, int CX, int CY, int Z,
     float pa, float vxa, float vya, float m11a, float m12a, float m21a, float m22a,
@@ -8,19 +22,8 @@ void compute(
     float pc, float vxc, float vyc, float m11c, float m12c, float m21c, float m22c,
     float pd, float vxd, float vyd, float m11d, float m12d, float m21d, float m22d
 ) {
-  // Initialise seed for Mitchell and Moore algorithm.
-  unsigned long values[64] = {
-    197836, 142543, 291521, 273561, 670056, 116695, 683937, 296537,
-    177078, 951911, 593837, 986708, 452842, 106204, 131928, 664729,
-    264312, 809367, 493748, 202314, 437622, 128469, 596988, 260804,
-    163751, 367768, 128855, 972013, 767828, 473042, 455736, 179862,
-    838753, 985825, 893627, 804729, 233619, 199135, 624805, 365403,
-    980247, 443497, 453940, 118814, 603288, 600320, 736065, 909999,
-    583336, 670013, 387305, 806653, 952255, 828683, 938444, 138474,
-    313893, 283357, 221719, 212776, 774775, 779879, 794590, 787382
-  };
 
-  unsigned long size = (W * H) << 2;
+  unsigned int size = (W * H) << 2;
   unsigned char v;
   unsigned int rnd, p, idx;
   unsigned int x, y, xx, yy, xd, yd;
